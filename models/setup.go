@@ -38,4 +38,6 @@ func ConnectDatabase(){
 		fmt.Printf("We are connected to the %s database", Dbdriver)
 	}
 
+	DB.AutoMigrate(&User{})
+
 }
