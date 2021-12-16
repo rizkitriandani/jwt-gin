@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"project/jwt-gin/models"
+	"project/jwt-gin/token"
 
 	"github.com/gin-gonic/gin"
 )
@@ -77,4 +78,24 @@ func Login(c *gin.Context) {
 		"response":response,
 	})
 
+}
+
+func CurrentUser(c *gin.Context){
+
+	user_id,err := token.ExtractTokenID(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest,gin.H{
+			"error":err,
+		})
+	}
+
+	u,err:=models.GetUserByID(user_id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message":"success","data":u})
 }
